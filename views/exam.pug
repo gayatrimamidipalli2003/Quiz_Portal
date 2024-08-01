@@ -1,0 +1,26 @@
+doctype html
+html(lang='en')
+  head
+    title Random Questions
+  body
+    h1 Random Questions
+    h2(id='timer') TIMER
+    form(id='exam-form', action='/submit-answers', method='post') // Added id attribute to the form
+      each question, questionIndex in questions
+        fieldset
+          legend= question.question
+          each option, optionIndex in question.options
+            label
+              input(type='radio' name=`question${questionIndex}` value=optionIndex)
+              | #{option}
+      input(type='submit' value='Submit Answers')
+    script.
+      let timeLeft = 300;
+      let timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerHTML = `Time left: ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('exam-form').submit();
+        }
+      }, 1000);
